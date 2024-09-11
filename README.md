@@ -13,7 +13,7 @@ Things you may want to cover:
 
 * Database creation
 
-* Database initialization
+* Database initialization◊◊
 
 * How to run the test suite
 
@@ -22,3 +22,4 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+![Schema Diagram](screenshot_2024-09-10_at_6.38.01___pm_720.png)
