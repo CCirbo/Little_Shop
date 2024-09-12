@@ -1,9 +1,5 @@
 require 'rails_helper'
 
-RSpec.configure do |config| 
- config.formatter = :documentation 
- end
-
 RSpec.describe "Merchants endpoints" do
   it "can send a list of merchants" do
     merchant1 = Merchant.create!(name: "Brown and Sons")
