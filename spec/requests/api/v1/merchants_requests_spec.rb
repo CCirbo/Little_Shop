@@ -1,16 +1,12 @@
 require 'rails_helper'
 
-RSpec.configure do |config| 
- config.formatter = :documentation 
- end
-
 RSpec.describe "Merchants endpoints" do
   it "can send a list of merchants" do
     merchant1 = Merchant.create!(name: "Brown and Sons")
     merchant2 = Merchant.create!(name: "Brown and Moms")
     merchant3 = Merchant.create!(name: "Brown and Dads")
 
-    get "/api/v1/merchants"
+    get "/api/v1/items"
     merchants = JSON.parse(response.body, symbolize_names: true)[:data]
     
     expect(response).to be_successful
@@ -32,7 +28,7 @@ RSpec.describe "Merchants endpoints" do
   end
 
 
-  describe "Fetch one poster" do
+  describe "Fetch one merchant" do
     it "can get one poster by its id" do
       id =  merchant1 = Merchant.create!(name: "Brown and Sons").id
       get "/api/v1/merchants/#{id}"
@@ -49,7 +45,6 @@ RSpec.describe "Merchants endpoints" do
       expect(merchant1).to have_key(:name)
       expect(merchant1[:name]).to be_a(String)
     end
-
 
     it "can update an existing merchant" do
       id = Merchant.create(name: "Brown and Sons",).id
