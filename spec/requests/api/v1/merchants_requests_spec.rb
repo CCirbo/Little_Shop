@@ -110,7 +110,9 @@ RSpec.describe "Merchants endpoints" do
     end
 
     it 'can delete a merchant' do
-      
+      merchant1 = Merchant.create!(name: "Brown and Sons")
+      merchant2 = Merchant.create!(name: "Brown and Moms")
+      merchant3 = Merchant.create!(name: "Brown and Dads")
     end
   end
 end
