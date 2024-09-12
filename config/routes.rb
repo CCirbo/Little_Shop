@@ -9,4 +9,5 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   get "/api/v1/merchants", to: "api/v1/merchants#index"
+  patch "/api/v1/merchants/:id", to: "api/v1/merchants#update" 
 end
