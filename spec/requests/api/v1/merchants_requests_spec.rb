@@ -48,7 +48,7 @@ RSpec.describe "Merchants endpoints" do
 
       expect(merchant1).to have_key(:name)
       expect(merchant1[:name]).to be_a(String)
-
+    end
 
     it "can update an existing merchant" do
       id = Merchant.create(name: "Brown and Sons",).id
@@ -108,7 +108,7 @@ RSpec.describe "Merchants endpoints" do
       expect(attributes[:name]).to be_a(String)
     end
   end
-
+end
 
   # it "can return the count" do
   #   merchant1 = Merchant.create!(name: "Brown and Sons")
