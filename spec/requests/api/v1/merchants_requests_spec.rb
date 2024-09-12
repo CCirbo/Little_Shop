@@ -10,7 +10,7 @@ RSpec.describe "Merchants endpoints" do
     merchant2 = Merchant.create!(name: "Brown and Moms")
     merchant3 = Merchant.create!(name: "Brown and Dads")
 
-    get "/api/v1/merchants"
+    get "/api/v1/items"
     merchants = JSON.parse(response.body, symbolize_names: true)[:data]
     
     expect(response).to be_successful
@@ -32,7 +32,7 @@ RSpec.describe "Merchants endpoints" do
   end
 
 
-  describe "Fetch one poster" do
+  describe "Fetch one merchant" do
     it "can get one poster by its id" do
       id =  merchant1 = Merchant.create!(name: "Brown and Sons").id
       get "/api/v1/merchants/#{id}"
