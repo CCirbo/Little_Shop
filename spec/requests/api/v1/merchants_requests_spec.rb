@@ -52,15 +52,32 @@ RSpec.describe "Merchants endpoints" do
   
   
   # get all merchants with calculated count of items
-  xit "can return the count" do
+  it "can return the total merchant count" do
     
     get "/api/v1/merchants?sorted=age"
-    
-    merchants = JSON.parse(response.body, symbolize_names: true)[:data]
+    merchants = JSON.parse(response.body, symbolize_names: true)
     
     expect(response).to be_successful
+    
+    expect(merchants).to have_key(:meta)
+    expect(merchants[:meta][:count]).to eq(3)
+    expect(posters[:data].count).to eq(3)
   end
 
+
+  it "Can count the number of returned posters displayed" do
+
+    get "/api/v1/posters"
+
+    expect(response).to be_successful
+
+    posters = JSON.parse(response.body, symbolize_names: true)
+
+    expect(posters).to have_key(:meta)
+    expect(posters[:meta][:count]).to eq(3)
+
+    expect(posters[:data].count).to eq(3)
+  end
   
   # get all merchants with returned items (check invoice)
 
