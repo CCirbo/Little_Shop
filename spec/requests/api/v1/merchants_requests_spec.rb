@@ -111,14 +111,26 @@ RSpec.describe "Merchants endpoints" do
 
     it 'can delete a merchant' do
       merchant = Merchant.create!(name: "Brown and Sons")
+      item1 = merchant.items.create!(name: "Item 1" , unit_price: 20)
+      item2 = merchant.items.create!(name: "Item 2", unit_price: 30)
+      customer = Customer.create!(first_name: "John", last_name: "Doe")
+      invoice1 = Invoice.create!(merchant: merchant, customer: customer, status: "pending")
+      invoice2 = Invoice.create!(merchant: merchant, customer: customer, status: "completed")
 
       expect(merchant).to be_a(Merchant)
+      expect(merchant).to be_present
       expect(Merchant.all).to include(merchant)
-    
-      delete "/api/v1/merchants/#{merchant.id}"
-    
-      expect(response).to be_successful
-      expect(Merchant.all).not_to include(merchant)
+      expect(merchant.items).to include(item1, item2)
+      expect(merchant.invoices).to include(invoice1, invoice2)
+  
+      expect{ delete "/api/v1/merchants/#{merchant.id}" }.to change(Merchant, :count).by(-1)
+
+      expect{ Merchant.find(merchant.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { Item.find(item1.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { Item.find(item2.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { Invoice.find(invoice1.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { Invoice.find(invoice2.id) }.to raise_error(ActiveRecord::RecordNotFound)
+
       expect(response).to have_http_status(:no_content)
     end
   end
