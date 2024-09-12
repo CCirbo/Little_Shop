@@ -108,6 +108,10 @@ RSpec.describe "Merchants endpoints" do
       expect(attributes).to have_key(:name)
       expect(attributes[:name]).to be_a(String)
     end
+
+    it 'can delete a merchant' do
+      
+    end
   end
 end
 
