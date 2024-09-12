@@ -110,9 +110,16 @@ RSpec.describe "Merchants endpoints" do
     end
 
     it 'can delete a merchant' do
-      merchant1 = Merchant.create!(name: "Brown and Sons")
-      merchant2 = Merchant.create!(name: "Brown and Moms")
-      merchant3 = Merchant.create!(name: "Brown and Dads")
+      merchant = Merchant.create!(name: "Brown and Sons")
+
+      expect(merchant).to be_a(Merchant)
+      expect(Merchant.all).to include(merchant)
+    
+      delete "/api/v1/merchants/#{merchant.id}"
+    
+      expect(response).to be_successful
+      expect(Merchant.all).not_to include(merchant)
+      expect(response).to have_http_status(:no_content)
     end
   end
 end
