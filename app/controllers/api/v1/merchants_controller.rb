@@ -8,3 +8,4 @@ class Api::V1::MerchantsController < ApplicationController
     #     render json: SongSerializer.format_song(Song.find(params[:id]))
     #  end
 end
+

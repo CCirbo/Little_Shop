@@ -2,9 +2,10 @@ require 'rails_helper'
 
 RSpec.describe "Merchants endpoints" do
   before(:each) do
-    @merchant_1 = Merchant.create!(name: "Brown and Sons", status: returned,created_at: 3.seconds.ago)
-    @merchant_2 = Merchant.create!(name: "Brown and Moms", status: ,created_at: 2.seconds.ago)
-    @merchant_3 = Merchant.create!(name: "Brown and Dads", status: ,created_at: 1.seconds.ago)
+    # How to create default status for returned/not returned?
+    @merchant_1 = Merchant.create!(name: "Brown and Sons", created_at: 3.seconds.ago)
+    @merchant_2 = Merchant.create!(name: "Brown and Moms", created_at: 2.seconds.ago)
+    @merchant_3 = Merchant.create!(name: "Brown and Dads", created_at: 1.seconds.ago)
   end
 
   it "can retrieve ALL merchants" do
@@ -39,14 +40,14 @@ RSpec.describe "Merchants endpoints" do
   # get all merchants sorted by newest to oldest
   it "sorts merchants by creation date" do
     
-    get "/api/v1/posters?sort=desc"
-    posters = JSON.parse(response.body, symbolize_names: true)
+    get "/api/v1/merchants?sort=asc"
+    merchants = JSON.parse(response.body, symbolize_names: true)
     
     expect(response).to be_successful
 
-    expect(@merchant_3[:data][0][:attributes][:name]).to eq("Brown and Dads")
-    expect(@merchant_2[:data][1][:attributes][:name]).to eq("Brown and Moms")
-    expect(@merchant_1[:data][2][:attributes][:name]).to eq("Brown and Sons")
+    expect(merchants[:data][0][:attributes][:name]).to eq("Brown and Sons")
+    expect(merchants[:data][1][:attributes][:name]).to eq("Brown and Moms")
+    expect(merchants[:data][2][:attributes][:name]).to eq("Brown and Dads")
   end
   
   
@@ -60,7 +61,7 @@ RSpec.describe "Merchants endpoints" do
     
     expect(merchants).to have_key(:meta)
     expect(merchants[:meta][:count]).to eq(3)
-    expect(posters[:data].count).to eq(3)
+    expect(merchants[:data].count).to eq(3)
   end
   
   # get all merchants with returned items (check invoice)
@@ -77,4 +78,4 @@ RSpec.describe "Merchants endpoints" do
   end
 
 end
-  
+
