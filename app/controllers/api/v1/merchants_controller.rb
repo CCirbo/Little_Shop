@@ -18,6 +18,11 @@ class Api::V1::MerchantsController < ApplicationController
         render json: MerchantSerializer.new(merchant)
     end
 
+    def create
+        new_merchant = Merchant.create(merchant_params)
+        render json: MerchantSerializer.new(new_merchant), status: 201
+    end
+
     # def show
     #     render json: SongSerializer.format_song(Song.find(params[:id]))
     #  end
