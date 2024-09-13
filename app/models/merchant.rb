@@ -7,6 +7,7 @@ class Merchant < ApplicationRecord
         order(created_at: :desc)
     end
 
+
   def self.sort_and_filter(params)
     if params[:status] == "returned"
       merchants_with_returns
