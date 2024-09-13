@@ -1,24 +1,15 @@
 class Api::V1::MerchantsController < ApplicationController
   def index
-      # if params[:count]
-      #     merchants = Merchant.calculated_count
-      # elsif params[:sorted]
-      #     merchants = Merchant.sort_by_age
-      # elsif params[:status]
-      #     merchants = Merchant.returned_items(params[:status])
-      # else 
-          merchants = Merchant.all
-      # end
+    merchants = Merchant.sort_and_filter(params)
     render json: MerchantSerializer.new(merchants)
+    # Need to inject the :item_count key nested under :attributes
+    # item_count: should have value of --> merchant.item.count
   end
 
   def show
       render json: MerchantSerializer.new(Merchant.find(params[:id]))
-  end
 
-  def show
-      render json: MerchantSerializer.new(Merchant.find(params[:id]))
-  end
+   end
 
   def update
       merchant = Merchant.find(params[:id])
@@ -26,11 +17,12 @@ class Api::V1::MerchantsController < ApplicationController
       render json: MerchantSerializer.new(merchant)
   end
 
+
   def create
       new_merchant = Merchant.create(merchant_params)
       render json: MerchantSerializer.new(new_merchant), status: 201
   end
-  
+
   def destroy
       merchant = Merchant.find(params[:id])
       merchant.destroy  # Use destroy to trigger dependent: :destroy
