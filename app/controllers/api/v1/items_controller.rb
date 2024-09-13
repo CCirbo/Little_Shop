@@ -9,6 +9,17 @@ class Api::V1::ItemsController < ApplicationController
     render json: ItemSerializer.new(items)
   end
 
+
+  def show
+    render json: ItemSerializer.new(Item.find(params[:id]))
+  end
+
+  def update
+    updated_item = Item.update(params[:id], item_params)
+    render json: ItemSerializer.new(updated_item)
+   end
+
+
   def create
     new_item = Item.create(item_params)
     render json: ItemSerializer.new(new_item), status: 201
