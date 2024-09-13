@@ -45,6 +45,7 @@ RSpec.describe "Items endpoints" do
     end
   end
 
+
   it 'can create a new item' do
     item_params = {
     name: "New Item",
@@ -95,3 +96,24 @@ RSpec.describe "Items endpoints" do
     expect(attributes[:merchant_id]).to be_a(Integer)
   end
 end
+
+    it 'returns all items by price(Low to High)' do 
+      Merchant.create!(id: 1, name: "Test Merchant")
+      Item.create!(name: "Mouse", description: "Clicks", unit_price:100.99 , merchant_id:1)
+      Item.create!(name: "Keyboard", description: "Types", unit_price:10.99 , merchant_id:1)
+      Item.create!(name: "Pad", description: "Soft", unit_price:120.99 , merchant_id:1)
+      Item.create!(name: "Notebook", description: "Gets Written On", unit_price:121.99 , merchant_id:1)
+      
+      get "/api/v1/items?sorted=price" 
+
+      items = JSON.parse(response.body, symbolize_names: true)[:data]
+
+      expect(response).to be_successful
+
+      prices = items.map { |item| item[:attributes][:unit_price] }
+    
+      expect(prices).to eq(prices.sort)
+
+    end
+  end
+

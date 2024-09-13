@@ -16,4 +16,5 @@ Rails.application.routes.draw do
 
   get "/api/v1/items", to: "api/v1/items#index"
   post "/api/v1/items", to: "api/v1/items#create"
+  get "/api/v1/items?sorted=price", to: "api/v1/items#index"
 end
