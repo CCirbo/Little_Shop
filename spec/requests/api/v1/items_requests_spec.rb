@@ -95,7 +95,6 @@ RSpec.describe "Items endpoints" do
     expect(attributes).to have_key(:merchant_id)
     expect(attributes[:merchant_id]).to be_a(Integer)
   end
-end
 
     it 'returns all items by price(Low to High)' do 
       Merchant.create!(id: 1, name: "Test Merchant")
