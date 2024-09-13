@@ -167,14 +167,26 @@ RSpec.describe "Merchants endpoints" do
       expect(response).to have_http_status(:no_content)
     end
   end
+
+  it 'returns merchants sorted by creation date (newest first)' do
+    Merchant.create!(name: "Merchant A", created_at: 2.days.ago)
+    Merchant.create!(name: "Merchant B", created_at: 1.day.ago)
+    Merchant.create!(name: "Merchant C", created_at: Time.now)
+
+    get "/api/v1/merchants?sorted=age"
+
+
+    merchants = JSON.parse(response.body, symbolize_names: true)[:data]
+
+    expect(response).to be_successful
+
+    creation_dates = merchants.map { |merchant| DateTime.parse(merchant[:attributes][:created_at]) }
+
+    expect(creation_dates).to eq(creation_dates.sort.reverse)
+  end
 end
 
-  # it "can return the count" do
-  #   merchant1 = Merchant.create!(name: "Brown and Sons")
-  #   merchant2 = Merchant.create!(name: "Brown and Moms")
-  #   merchant3 = Merchant.create!(name: "Brown and Dads")
-
-  #   get "/api/v1/merchants?sorted=age"
+ 
 
   #   expect(merchants[:data][2][:attributes][:name]).to eq("Brown and Sons")
   #   expect(merchants[:data][1][:attributes][:name]).to eq("Brown and Moms")
@@ -208,6 +220,7 @@ end
     expect(merchants[:data][2][:attributes][:name]).to eq(@merchant_3.name)
   end
 end
+
 
 
  
