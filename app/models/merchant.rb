@@ -6,8 +6,6 @@ class Merchant < ApplicationRecord
     def self.sorted_by_age
         order(created_at: :desc)
     end
-end
-
 
   def self.sort_and_filter(params)
     if params[:status] == "returned"
@@ -18,7 +16,6 @@ end
       Merchant.all
     end
   end
-    
 
   def self.sort
     Merchant.order(created_at: :desc)
