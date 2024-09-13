@@ -1,6 +1,6 @@
 class Merchant < ApplicationRecord
-  has_many :items
-  has_many :invoices
+  has_many :items, dependent: :destroy
+  has_many :invoices, dependent: :destroy
 
   def self.sort_and_filter(params)
     if params[:status] == "returned"
@@ -23,4 +23,3 @@ class Merchant < ApplicationRecord
     # Then we filter with .where for those merchants whose invoices have a status of "returned"
   end
 end
-
