@@ -42,5 +42,11 @@ it "can send a list of invoices for a merchant based on status" do
     expect(invoices).to eq([])
   end
 
-  
+  it 'returns an error for invalid status' do
+    merchant = create(:merchant)
+
+    get "/api/v1/merchants/#{merchant.id}/invoices?status=invalid_status"
+
+    expect(response.status).to eq(400)
+  end
 end
