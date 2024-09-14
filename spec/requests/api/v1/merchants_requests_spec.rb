@@ -122,25 +122,28 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(attributes[:name]).to be_a(String)
     end
 
-    it 'can delete a merchant' do
-      merchant = Merchant.create!(name: "Brown and Sons")
-      item1 = merchant.items.create!(name: "Item 1" , unit_price: 20)
-      item2 = merchant.items.create!(name: "Item 2", unit_price: 30)
-      customer = Customer.create!(first_name: "John", last_name: "Doe")
-      invoice1 = Invoice.create!(merchant: merchant, customer: customer, status: "pending")
-      invoice2 = Invoice.create!(merchant: merchant, customer: customer, status: "completed")
+    it 'can delete a merchant and associated records, returns 204 no content' do
+      item1 = @merchant_1.items.create!(name: "Item 1", unit_price: 20)
+      item2 = @merchant_1.items.create!(name: "Item 2", unit_price: 30)
 
-      expect(Merchant.all).to include(merchant)
-      expect(merchant.items).to include(item1, item2)
-      expect(merchant.invoices).to include(invoice1, invoice2)
+      expect(Merchant.count).to eq(3)
+      expect(Item.count).to eq(2)
+      expect(Invoice.count).to eq(5)
   
-      expect { delete "/api/v1/merchants/#{merchant.id}" }.to change(Merchant, :count).by(-1)
+      delete "/api/v1/merchants/#{@merchant_1.id}"
 
-      expect { Merchant.find(merchant.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(response).to have_http_status(:no_content)
+      expect(response.body).to be_empty
+
+      expect(Merchant.count).to eq(2)
+      expect(Item.count).to eq(0)
+      expect(Invoice.count).to eq(3)
+
+      expect { Merchant.find(@merchant_1.id) }.to raise_error(ActiveRecord::RecordNotFound)
       expect { Item.find(item1.id) }.to raise_error(ActiveRecord::RecordNotFound)
       expect { Item.find(item2.id) }.to raise_error(ActiveRecord::RecordNotFound)
-      expect { Invoice.find(invoice1.id) }.to raise_error(ActiveRecord::RecordNotFound)
-      expect { Invoice.find(invoice2.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { Invoice.find(@invoice_1.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { Invoice.find(@invoice_2.id) }.to raise_error(ActiveRecord::RecordNotFound)
 
       expect(response).to have_http_status(:no_content)
     end
@@ -199,6 +202,7 @@ RSpec.describe "Merchants endpoints", type: :request do
     expect(merchants[:data][2][:attributes][:name]).to eq(@merchant_3.name)
   end
 end
+
 
 
 
