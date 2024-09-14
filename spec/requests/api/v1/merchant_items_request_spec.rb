@@ -15,7 +15,7 @@ RSpec.describe "MerchantItems", type: :request do
       expect(merchant_response).to have_key(:id)
       expect(merchant_response[:id]).to be_a(String)
 
-      expect(merchant_response).to have_key(:id)
+      expect(merchant_response).to have_key(:type)
       expect(merchant_response[:type]).to be_a(String)
 
       expect(merchant_response).to have_key(:attributes)
