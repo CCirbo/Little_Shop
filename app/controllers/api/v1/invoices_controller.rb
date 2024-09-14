@@ -1,4 +1,4 @@
-class Api::V1::InvoicesController <> ApplicationController
+class Api::V1::InvoicesController < ApplicationController
   def index
     merchant = Merchant.find(params[:merchant_id])
     status = params[:status]
@@ -9,6 +9,8 @@ class Api::V1::InvoicesController <> ApplicationController
       return render json: { error: 'Invalid status' }, status: :bad_request
     end
 
-    render json: InvoiceSerializer.new(invoices).serializable_hash, status: :ok
+    render json: InvoiceSerializer.new(invoices)
   end
 end
+
+
