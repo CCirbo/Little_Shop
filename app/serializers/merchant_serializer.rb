@@ -1,10 +1,9 @@
 class MerchantSerializer
   include JSONAPI::Serializer
 
-  attributes :name, :created_at
+  attributes :name
 
-  # merchants passed in as arg in Serializer
-  attribute :item_count do |merchant|
-    merchant.items.count
-  end
+  attribute :item_count, if: Proc.new {|merchants, params| params && params[:action] == "index" }
+  # require "pry"; binding.pry
+
 end

@@ -23,5 +23,9 @@ class Merchant < ApplicationRecord
     # That gives us access to ALL the merchants who have invoices actively associated with them
     # Then we .where for those merchants whose invoices have a status of "returned"
   end
+
+  def item_count 
+    self.items.count
+  end
 end
 
