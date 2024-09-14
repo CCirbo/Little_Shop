@@ -22,7 +22,7 @@ RSpec.describe "Merchants endpoints", type: :request do
     merchants = JSON.parse(response.body, symbolize_names: true)[:data]
     
     expect(response).to be_successful
-    expect(merchants.count).to eq(0) #had to change this from 3 to 0 to get test to pass
+    expect(merchants.count).to eq(3) #had to change this from 3 to 0 to get test to pass
 
     merchants.each do |merchant|
       expect(merchant).to have_key(:id)
@@ -164,7 +164,7 @@ RSpec.describe "Merchants endpoints", type: :request do
 
 
     # expect(creation_dates).to eq(creation_dates.sort.reverse) #this is not passing
-  end
+  
  
 
   # #   expect(merchants[:data][2][:attributes][:name]).to eq("Brown and Sons")
