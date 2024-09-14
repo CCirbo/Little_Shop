@@ -174,6 +174,24 @@ RSpec.describe "Merchants endpoints", type: :request do
     
     expect(merchants[:data][0][:attributes][:name]).to eq(@merchant_1.name)
     expect(merchants[:data][2][:attributes][:name]).to eq(@merchant_3.name)
-  end    
+  end
+
+describe 'sad paths' do
+  it "will gracefully handle merchant creation without required name" do
+    merchant_params = {}
+    
+    post "/api/v1/merchants", headers: headers, params: JSON.generate(merchant: merchant_params)
+
+    expect(response).to_not be_successful
+    expect(response.status).to eq(400)
+
+    data = JSON.parse(response.body, symbolize_names: true)
+
+    expect(data).to have_key(:errors)
+    expect(data[:errors]).to be_an(Array)
+    expect(data[:errors].first).to be_a(String)
+    expect(data[:errors].first).to include("Missing required merchant attributes")
+  end
+end
 end
 
