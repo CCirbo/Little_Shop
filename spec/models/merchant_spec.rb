@@ -30,7 +30,7 @@ RSpec.describe Merchant, type: :model do
     it "retrieves merchants sorted by creation date (newest first)" do
       expected = [@merchant_3, @merchant_2, @merchant_1]
 
-      result = Merchant.sort_and_filter({sort: "desc"})
+      result = Merchant.sort_and_filter({sorted: "age"})
       
       expect(result).to eq(expected)
     end

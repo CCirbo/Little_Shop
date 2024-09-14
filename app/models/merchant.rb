@@ -6,7 +6,7 @@ class Merchant < ApplicationRecord
   def self.sort_and_filter(params)
     if params[:status] == "returned"
       merchants_with_returns
-    elsif params[:sort] == "desc"
+    elsif params[:sorted] == "age"
       sort
     else
       Merchant.all
