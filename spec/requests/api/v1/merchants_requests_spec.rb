@@ -39,16 +39,19 @@ RSpec.describe "Merchants endpoints", type: :request do
     end
   end
 
-  it "sorts merchants by creation date (newest first)" do
-    get "/api/v1/merchants?sorted=age"
-    merchants = JSON.parse(response.body, symbolize_names: true)[:data]
+  # describe "index sad paths" do
+  #   it "returns an empty array if DB empty" do
+  #     Merchant.delete_all
+
+  #     get "/api/v1/merchants"
+
+  #     merchants = JSON.parse(response.body, symbolize_names: true)[:data]
     
-    expect(response).to be_successful
+  #     expect(response).to be_successful
+  #     expect(merchants).to be_empty
 
-    creation_dates = merchants.map { |merchant| DateTime.parse(merchant[:attributes][:created_at]) }
-
-    expect(creation_dates).to eq(creation_dates.sort.reverse)
-  end
+  #   end
+  # end
 
   describe "Fetch one merchant" do
     it "can return one merchant by its id" do
@@ -147,9 +150,6 @@ RSpec.describe "Merchants endpoints", type: :request do
 
 
     it 'returns merchants sorted by creation date (newest first)' do
-      Merchant.create!(name: "Merchant A", created_at: 2.days.ago)
-      Merchant.create!(name: "Merchant B", created_at: 1.day.ago)
-      Merchant.create!(name: "Merchant C", created_at: Time.now)
 
       get "/api/v1/merchants?sorted=age"
 
@@ -157,37 +157,11 @@ RSpec.describe "Merchants endpoints", type: :request do
 
       expect(response).to be_successful
 
-      creation_dates = merchants.map { |merchant| DateTime.parse(merchant[:attributes][:created_at]) }
-
-      expect(creation_dates).to eq(creation_dates.sort.reverse)
+      expect(merchants[0][:attributes][:name]).to eq("Brown and Dads")
+      expect(merchants[1][:attributes][:name]).to eq("Brown and Moms")
+      expect(merchants[2][:attributes][:name]).to eq("Brown and Sons")
     end
 
-
-    # expect(creation_dates).to eq(creation_dates.sort.reverse) #this is not passing
-  
- 
-
-  # #   expect(merchants[:data][2][:attributes][:name]).to eq("Brown and Sons")
-  # #   expect(merchants[:data][1][:attributes][:name]).to eq("Brown and Moms")
-  # #   expect(merchants[:data][0][:attributes][:name]).to eq("Brown and Dads")
-  # # end
-  
-  
-  # # get all merchants with calculated count of items
-  # # THIS IS NOT CORRECT YET
-  # xit "can return the total merchant count" do
-    
-  #   get "/api/v1/merchants?sorted=age"
-  #   merchants = JSON.parse(response.body, symbolize_names: true)
-    
-  #   expect(response).to be_successful
-    
-  #   expect(merchants).to have_key(:meta)
-  #   expect(merchants[:meta][:count]).to eq(3)
-  #   expect(merchants[:data].count).to eq(3)
-  # end
-  
-  # get all merchants with returned items (check invoice)
   it "returns only merchants with returned items" do
     
     get "/api/v1/merchants?status=returned"
@@ -201,7 +175,3 @@ RSpec.describe "Merchants endpoints", type: :request do
 end
 
 
-
-
-
- 
