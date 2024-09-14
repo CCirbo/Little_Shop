@@ -42,7 +42,5 @@ RSpec.describe Merchant, type: :model do
 
       expect(result).to eq(expected)
     end
-
-
   end
 end
