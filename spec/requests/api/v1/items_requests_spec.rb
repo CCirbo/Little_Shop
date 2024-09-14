@@ -172,6 +172,33 @@ RSpec.describe "Items endpoints" do
 
     end
   end
-end
+
+
+    it 'deletes the item and associated records, returns 204 no content' do
+
+      merchant = Merchant.create!(name: "Test Merchant")
+      item = merchant.items.create!(name: "Test Item", description: "This is a test item", unit_price: 100.0)
+      invoice = Invoice.create!(merchant: merchant, customer: Customer.create!(first_name: "John", last_name: "Doe"), status: "shipped")
+      invoice_item = InvoiceItem.create!(item: item, invoice: invoice, quantity: 1, unit_price: item.unit_price)
+
+
+      expect(Item.count).to eq(1)
+      expect(InvoiceItem.count).to eq(1)
+      expect(Invoice.count).to eq(1)
+
+      delete "/api/v1/items/#{item.id}"
+
+      expect(response).to have_http_status(:no_content)
+      expect(response.body).to be_empty
+
+      expect(Item.count).to eq(0)
+      expect(InvoiceItem.count).to eq(0)
+      expect(Invoice.count).to eq(1) 
+
+      expect { Item.find(item.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { InvoiceItem.find(invoice_item.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
 
 
