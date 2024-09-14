@@ -201,6 +201,9 @@ RSpec.describe "Merchants endpoints", type: :request do
     expect(merchants[:data][0][:attributes][:name]).to eq(@merchant_1.name)
     expect(merchants[:data][2][:attributes][:name]).to eq(@merchant_3.name)
   end
+
+
+    
 end
 
 

@@ -26,5 +26,10 @@ Rails.application.routes.draw do
   delete "/api/v1/items/:id", to: "api/v1/items#destroy"
 
   get '/api/v1/items/:id/merchant', to: 'api/v1/merchant_items#show'
+
+  get "/api/v1/merchants/:merchant_id/customers", to: "api/v1/merchant_customers#index"
+
+
   get '/api/v1/merchants/:id/items', to: 'api/v1/item_merchants#index'
+
 end
