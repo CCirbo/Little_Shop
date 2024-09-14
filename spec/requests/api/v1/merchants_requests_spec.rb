@@ -40,7 +40,7 @@ RSpec.describe "Merchants endpoints", type: :request do
   end
 
   it "sorts merchants by creation date (newest first)" do
-    get "/api/v1/merchants?sort=desc"
+    get "/api/v1/merchants?sorted=age"
     merchants = JSON.parse(response.body, symbolize_names: true)[:data]
     
     expect(response).to be_successful
@@ -151,7 +151,7 @@ RSpec.describe "Merchants endpoints", type: :request do
       Merchant.create!(name: "Merchant B", created_at: 1.day.ago)
       Merchant.create!(name: "Merchant C", created_at: Time.now)
 
-      get "/api/v1/merchants?sort=desc"
+      get "/api/v1/merchants?sorted=age"
 
       merchants = JSON.parse(response.body, symbolize_names: true)[:data]
 
