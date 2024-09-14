@@ -6,6 +6,7 @@ class Api::V1::MerchantCustomersController < ApplicationController
 
         customers = Customer.for_merchant(params[:merchant_id])
         render json: CustomerSerializer.new(customers)
+    end
     
     #   merchant = Merchant.find(params[:merchant_id])
     #   customers = Customer.joins(:invoices).where(invoices: { merchant_id: merchant.id }).distinct
@@ -18,5 +19,5 @@ class Api::V1::MerchantCustomersController < ApplicationController
           .serialize_json, status: :not_found
     end
 
-    end
+    
 end
