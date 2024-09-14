@@ -34,8 +34,9 @@ class Api::V1::MerchantsController < ApplicationController
         head :no_content  # This should return a 204 No Content status
       rescue ActiveRecord::RecordNotFound
         head :not_found  # If the merchant is not found, return 404 Not Found
-     
     end
+
+ 
   
     private
   
