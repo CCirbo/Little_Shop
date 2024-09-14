@@ -19,10 +19,17 @@ class Api::V1::ItemsController < ApplicationController
     render json: ItemSerializer.new(updated_item)
   end
 
-
   def create
     new_item = Item.create(item_params)
     render json: ItemSerializer.new(new_item), status: 201
+  end
+
+  def destroy
+    item = Item.find(params[:id])
+    item.destroy
+    head :no_content
+  rescue ActiveRecord::RecordNotFound
+    head :not_found 
   end
 
   private
