@@ -20,4 +20,5 @@ Rails.application.routes.draw do
   post "/api/v1/items", to: "api/v1/items#create"
 
   get '/api/v1/items/:id/merchant', to: 'api/v1/merchant_items#show'
+  get "/api/v1/merchants/:merchant_id/invoices?status=<status>"
 end
