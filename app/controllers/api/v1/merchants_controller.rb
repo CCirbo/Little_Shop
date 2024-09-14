@@ -1,8 +1,9 @@
 class Api::V1::MerchantsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
+  
   def index
-    merchants = Merchant.sort_and_filter(params)
-    render json: MerchantSerializer.new(merchants)
+      merchants = Merchant.sort_and_filter(params)
+      render json: MerchantSerializer.new(merchants, {params: {action: "index"} } )
   end
 
   def show
@@ -26,7 +27,7 @@ class Api::V1::MerchantsController < ApplicationController
       merchant.destroy  
       head :no_content  
     # rescue ActiveRecord::RecordNotFound
-      head :not_found  
+#       head :not_found 
     # end
   end
 
