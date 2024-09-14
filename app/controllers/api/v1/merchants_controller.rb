@@ -1,4 +1,5 @@
 class Api::V1::MerchantsController < ApplicationController
+
   def index
       merchants = Merchant.sort_and_filter(params)
       render json: MerchantSerializer.new(merchants, {params: {action: "index"} } )
@@ -14,7 +15,6 @@ class Api::V1::MerchantsController < ApplicationController
       render json: MerchantSerializer.new(merchant)
   end
 
-
   def create
       new_merchant = Merchant.create(merchant_params)
       render json: MerchantSerializer.new(new_merchant), status: 201
@@ -26,7 +26,7 @@ class Api::V1::MerchantsController < ApplicationController
       head :no_content  # This should return a 204 No Content status
     rescue ActiveRecord::RecordNotFound
       head :not_found  # If the merchant is not found, return 404 Not Found
-    end
+  end
 
   private
 

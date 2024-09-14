@@ -72,95 +72,98 @@ RSpec.describe "Merchants endpoints", type: :request do
     end
   end
 
-    it "can update an existing merchant" do
-      id = Merchant.create!(name: "Brown and Sons").id
-      previous_name = Merchant.find(id).name
-      merchant_params = { name: "Red and Sons" }
-      headers = { "CONTENT_TYPE" => "application/json" }
-  
-      patch "/api/v1/merchants/#{id}", headers: headers, params: JSON.generate(merchant: merchant_params)
-      merchant = Merchant.find_by(id: id)
+  it "can update an existing merchant" do
+    id = Merchant.create!(name: "Brown and Sons").id
+    previous_name = Merchant.find(id).name
+    merchant_params = { name: "Red and Sons" }
+    headers = { "CONTENT_TYPE" => "application/json" }
 
-      expect(response).to be_successful
-      expect(merchant.name).to_not eq(previous_name)
-      expect(merchant.name).to eq("Red and Sons")
+    patch "/api/v1/merchants/#{id}", headers: headers, params: JSON.generate(merchant: merchant_params)
+    merchant = Merchant.find_by(id: id)
 
-      merchant_response = JSON.parse(response.body, symbolize_names: true)[:data]
+    expect(response).to be_successful
+    expect(merchant.name).to_not eq(previous_name)
+    expect(merchant.name).to eq("Red and Sons")
 
-      expect(merchant_response).to have_key(:id)
-      expect(merchant_response[:id]).to be_a(String)
+    merchant_response = JSON.parse(response.body, symbolize_names: true)[:data]
 
-      expect(merchant_response).to have_key(:type)
-      expect(merchant_response[:type]).to be_a(String)
+    expect(merchant_response).to have_key(:id)
+    expect(merchant_response[:id]).to be_a(String)
 
-      expect(merchant_response).to have_key(:attributes)
-      attributes = merchant_response[:attributes]
-      
-      expect(attributes).to have_key(:name)
-      expect(attributes[:name]).to be_a(String)
-    end
+    expect(merchant_response).to have_key(:type)
+    expect(merchant_response[:type]).to be_a(String)
 
-    it 'can create a new merchant' do
-      merchant_params = { name: "Big Tims" }
-      headers = { "CONTENT_TYPE" => "application/json" }
-  
-      post "/api/v1/merchants", headers: headers, params: JSON.generate(merchant: merchant_params)
-      created_merchant = Merchant.last
-  
-      expect(response).to be_successful
-      expect(created_merchant.name).to eq(merchant_params[:name])
-  
-      merchant = JSON.parse(response.body, symbolize_names: true)[:data]
-  
-      expect(merchant).to have_key(:id)
-      expect(merchant[:id]).to be_a(String)
-  
-      expect(merchant).to have_key(:type)
-      expect(merchant[:type]).to be_a(String)
-  
-      expect(merchant).to have_key(:attributes)
-      attributes = merchant[:attributes]
-      
-      expect(attributes).to have_key(:name)
-      expect(attributes[:name]).to be_a(String)
-    end
+    expect(merchant_response).to have_key(:attributes)
+    attributes = merchant_response[:attributes]
 
-    it 'can delete a merchant' do
-      merchant = Merchant.create!(name: "Brown and Sons")
-      item1 = merchant.items.create!(name: "Item 1" , unit_price: 20)
-      item2 = merchant.items.create!(name: "Item 2", unit_price: 30)
-      customer = Customer.create!(first_name: "John", last_name: "Doe")
-      invoice1 = Invoice.create!(merchant: merchant, customer: customer, status: "pending")
-      invoice2 = Invoice.create!(merchant: merchant, customer: customer, status: "completed")
+    expect(attributes).to have_key(:name)
+    expect(attributes[:name]).to be_a(String)
+  end
 
-      expect(Merchant.all).to include(merchant)
-      expect(merchant.items).to include(item1, item2)
-      expect(merchant.invoices).to include(invoice1, invoice2)
-  
-      expect { delete "/api/v1/merchants/#{merchant.id}" }.to change(Merchant, :count).by(-1)
+  it 'can create a new merchant' do
+    merchant_params = { name: "Big Tims" }
+    headers = { "CONTENT_TYPE" => "application/json" }
 
-      expect { Merchant.find(merchant.id) }.to raise_error(ActiveRecord::RecordNotFound)
-      expect { Item.find(item1.id) }.to raise_error(ActiveRecord::RecordNotFound)
-      expect { Item.find(item2.id) }.to raise_error(ActiveRecord::RecordNotFound)
-      expect { Invoice.find(invoice1.id) }.to raise_error(ActiveRecord::RecordNotFound)
-      expect { Invoice.find(invoice2.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    post "/api/v1/merchants", headers: headers, params: JSON.generate(merchant: merchant_params)
+    created_merchant = Merchant.last
 
-      expect(response).to have_http_status(:no_content)
-    end
+    expect(response).to be_successful
+    expect(created_merchant.name).to eq(merchant_params[:name])
+
+    merchant = JSON.parse(response.body, symbolize_names: true)[:data]
+
+    expect(merchant).to have_key(:id)
+    expect(merchant[:id]).to be_a(String)
+
+    expect(merchant).to have_key(:type)
+    expect(merchant[:type]).to be_a(String)
+
+    expect(merchant).to have_key(:attributes)
+    attributes = merchant[:attributes]
+
+    expect(attributes).to have_key(:name)
+    expect(attributes[:name]).to be_a(String)
+  end
+
+  it 'can delete a merchant and associated records, returns 204 no content' do
+    item1 = @merchant_1.items.create!(name: "Item 1", unit_price: 20)
+    item2 = @merchant_1.items.create!(name: "Item 2", unit_price: 30)
+
+    expect(Merchant.count).to eq(3)
+    expect(Item.count).to eq(2)
+    expect(Invoice.count).to eq(5)
+
+    delete "/api/v1/merchants/#{@merchant_1.id}"
+
+    expect(response).to have_http_status(:no_content)
+    expect(response.body).to be_empty
+
+    expect(Merchant.count).to eq(2)
+    expect(Item.count).to eq(0)
+    expect(Invoice.count).to eq(3)
+
+    expect { Merchant.find(@merchant_1.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    expect { Item.find(item1.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    expect { Item.find(item2.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    expect { Invoice.find(@invoice_1.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    expect { Invoice.find(@invoice_2.id) }.to raise_error(ActiveRecord::RecordNotFound)
+
+    expect(response).to have_http_status(:no_content)
+  end
 
 
-    it 'returns merchants sorted by creation date (newest first)' do
+  it 'returns merchants sorted by creation date (newest first)' do
 
-      get "/api/v1/merchants?sorted=age"
+    get "/api/v1/merchants?sorted=age"
 
-      merchants = JSON.parse(response.body, symbolize_names: true)[:data]
+    merchants = JSON.parse(response.body, symbolize_names: true)[:data]
 
-      expect(response).to be_successful
+    expect(response).to be_successful
 
-      expect(merchants[0][:attributes][:name]).to eq("Brown and Dads")
-      expect(merchants[1][:attributes][:name]).to eq("Brown and Moms")
-      expect(merchants[2][:attributes][:name]).to eq("Brown and Sons")
-    end
+    expect(merchants[0][:attributes][:name]).to eq("Brown and Dads")
+    expect(merchants[1][:attributes][:name]).to eq("Brown and Moms")
+    expect(merchants[2][:attributes][:name]).to eq("Brown and Sons")
+  end
 
   it "returns only merchants with returned items" do
     
@@ -171,7 +174,6 @@ RSpec.describe "Merchants endpoints", type: :request do
     
     expect(merchants[:data][0][:attributes][:name]).to eq(@merchant_1.name)
     expect(merchants[:data][2][:attributes][:name]).to eq(@merchant_3.name)
-  end
+  end    
 end
-
 
