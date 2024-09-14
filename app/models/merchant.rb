@@ -1,12 +1,7 @@
 class Merchant < ApplicationRecord
 
-    has_many :items, dependent: :destroy
-    has_many :invoices, dependent: :destroy
-
-    def self.sorted_by_age
-        order(created_at: :desc)
-    end
-
+  has_many :items, dependent: :destroy
+  has_many :invoices, dependent: :destroy
 
   def self.sort_and_filter(params)
     if params[:status] == "returned"
@@ -25,8 +20,8 @@ class Merchant < ApplicationRecord
   def self.merchants_with_returns
     Merchant.joins(:invoices).where(invoices: { status: "returned" })
     # We join the Merchant table with the Invoices table
-    # That essentially gives us access to ALL the merchants who have invoices actively associated with them
-    # Then we filter with .where for those merchants whose invoices have a status of "returned"
+    # That gives us access to ALL the merchants who have invoices actively associated with them
+    # Then we .where for those merchants whose invoices have a status of "returned"
   end
 end
 
