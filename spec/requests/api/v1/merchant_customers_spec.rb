@@ -55,4 +55,17 @@ RSpec.describe "Merchants Customers API", type: :request do
     expect(customers).to eq([])
   end
 
+  it "returns a 404 error if the merchant id does not exist" do
+    get "/api/v1/merchants/999999/customers" # Non-existent merchant ID
+  
+    expect(response).to_not be_successful
+    expect(response.status).to eq(404)
+  
+    data = JSON.parse(response.body, symbolize_names: true)
+  
+    expect(data[:errors]).to be_a(Array)
+    expect(data[:errors].first[:status]).to eq("404")
+    expect(data[:errors].first[:title]).to eq("Couldn't find Merchant with 'id'=999999")
+  end
+
 end
