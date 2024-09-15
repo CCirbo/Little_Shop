@@ -1,11 +1,5 @@
 require 'rails_helper'
 
-RSpec.configure do |config| 
-
- config.formatter = :documentation 
-
-
-end
 
 RSpec.describe "Items endpoints" do
   it "can send a list of items" do
@@ -81,6 +75,21 @@ RSpec.describe "Items endpoints" do
       end
     end
 
+    describe 'sad paths fetch one item' do
+      it "will gracefully handle if an item id doesn't exist" do
+        get "/api/v1/items/1" # Corrected the endpoint
+    
+        expect(response).to_not be_successful
+        expect(response.status).to eq(404)
+    
+        data = JSON.parse(response.body, symbolize_names: true)
+        
+        expect(data[:errors]).to be_a(Array)
+        expect(data[:errors].first[:status]).to eq("404")
+        expect(data[:errors].first[:title]).to eq("Couldn't find Item with 'id'=1") # Updated the resource to 'Item'
+      end
+    end
+
     describe "Update New Item" do
       it "can update an existing item" do
         Merchant.create!(id: 1, name: "Test Merchant")
@@ -96,6 +105,25 @@ RSpec.describe "Items endpoints" do
         expect(updated_item.name).to_not eq(previous_name)
         expect(updated_item.name).to eq("Tray")
 
+      end
+    end
+
+    describe "Update New Item - Sad Path" do
+      it "returns a 404 error if the item does not exist" do
+        Merchant.create!(id: 1, name: "Test Merchant")
+        item_params = {name: "Tray"}
+        headers = {"CONTENT_TYPE" => "application/json"}
+        
+        patch "/api/v1/items/9999", headers: headers, params: JSON.generate({item: item_params}) # Non-existent item ID
+    
+        expect(response).to_not be_successful
+        expect(response.status).to eq(404)
+    
+        data = JSON.parse(response.body, symbolize_names: true)
+        
+        expect(data[:errors]).to be_a(Array)
+        expect(data[:errors].first[:status]).to eq("404")
+        expect(data[:errors].first[:title]).to eq("Couldn't find Item with 'id'=9999")
       end
     end
 
