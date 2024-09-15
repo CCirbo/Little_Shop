@@ -44,4 +44,27 @@ RSpec.describe "Item Merchants" do
       expect(item[:attributes][:merchant_id]).to eq(merchant.id)
     end
   end
+
+  it 'handles an exception gracefully with a error message' do 
+    get "/api/v1/merchants/9999/items"
+
+    expect(response).to have_http_status(404)
+    
+    json_response = JSON.parse(response.body, symbolize_names: true)
+    
+    expect(json_response).to have_key(:message)
+    expect(json_response[:message]).to be_a(String)
+
+    expect(json_response).to have_key(:errors)
+    expect(json_response[:errors]).to be_a(Array)
+
+    error = json_response[:errors].first
+
+    expect(error).to have_key(:status)
+    expect(error[:status]).to be_a(String)
+
+    expect(error).to have_key(:title)
+    expect(error[:title]).to be_a(String)
+    
+  end 
 end
