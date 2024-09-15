@@ -29,8 +29,8 @@ class Api::V1::ItemsController < ApplicationController
     item = Item.find(params[:id])
     item.destroy
     head :no_content
-  rescue ActiveRecord::RecordNotFound
-    head :not_found 
+  # rescue ActiveRecord::RecordNotFound
+  #   head :not_found 
   end
 
   private
