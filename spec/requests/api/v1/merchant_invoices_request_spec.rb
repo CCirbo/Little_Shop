@@ -54,4 +54,47 @@ RSpec.describe "Merchant Invoices API" do
 
     expect(response.status).to eq(400)
   end
+
+  it 'returns all invoices for a merchant if no status is provided' do
+    merchant = Merchant.create!(name: "Test Merchant")
+    customer = Customer.create!(first_name: "Customer First", last_name: "Customer Last")
+
+    invoice1 = Invoice.create!(status: "shipped", merchant_id: merchant.id, customer_id: customer.id)
+    invoice2 = Invoice.create!(status: "packaged", merchant_id: merchant.id, customer_id: customer.id)
+    invoice3 = Invoice.create!(status: "returned", merchant_id: merchant.id, customer_id: customer.id)
+
+    get "/api/v1/merchants/#{merchant.id}/invoices"
+
+    expect(response).to be_successful
+    invoices = JSON.parse(response.body, symbolize_names: true)[:data]
+
+    expect(invoices.count).to eq(3)
+
+    expect(invoices[0][:id].to_i).to eq(invoice1.id)
+    expect(invoices[1][:id].to_i).to eq(invoice2.id)
+    expect(invoices[2][:id].to_i).to eq(invoice3.id)
+  end
+
+  it 'returns a 404 error when merchant is not found' do
+    get "/api/v1/merchants/9999/invoices"
+
+    expect(response).to have_http_status(:not_found)
+    
+    error_response = JSON.parse(response.body, symbolize_names: true)
+
+    expect(error_response).to have_key(:message)
+    expect(error_response[:message]).to eq("your query could not be completed")
+
+    expect(error_response).to have_key(:errors)
+    expect(error_response[:errors]).to be_an(Array)
+
+    error = error_response[:errors].first
+
+    expect(error).to have_key(:status)
+    expect(error[:status]).to eq("404")
+
+    expect(error).to have_key(:title)
+    expect(error[:title]).to eq("Couldn't find Merchant with 'id'=9999")
+  end
+
 end
