@@ -17,8 +17,16 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def create
-      new_merchant = Merchant.create(merchant_params)
-      render json: MerchantSerializer.new(new_merchant), status: 201
+    begin
+      new_merchant = Merchant.create!(merchant_params)
+      render json: MerchantSerializer.new(new_merchant), status: :created
+    rescue ActionController::ParameterMissing => exception
+      render json: {
+        message: "Invalid parameters",
+        errors: ["Missing required merchant attributes"]
+      }, status: :bad_request
+    end
+
   end
 
   def destroy
