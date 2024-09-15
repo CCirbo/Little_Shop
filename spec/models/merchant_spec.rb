@@ -43,4 +43,6 @@ RSpec.describe Merchant, type: :model do
       expect(result).to eq(expected)
     end
   end
+
+    #need test for merchant find by name. 
 end
