@@ -26,7 +26,7 @@ class Item < ApplicationRecord
     end
 
     def self.find_one_by_name(name)
-        self.where("name ILIKE", "%#{name}%").order(:name).first
+        self.where("name ILIKE '%#{name}%'").order(:name).first
     end
     
     def self.filter_by_name(name)

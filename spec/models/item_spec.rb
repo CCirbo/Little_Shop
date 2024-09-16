@@ -32,6 +32,31 @@ RSpec.describe Item, type: :model do
       it 'filters items by max_price' do
         expect(Item.filter_by_max(100)).to eq([@item_2])
       end
+
+      describe "find_one_by_name" do
+        before(:each) do
+          @merchant = Merchant.create!(name: "Test Merchant")
+          @item_1 = Item.create!(name: "Thing", description: "Thingy", unit_price: 1.99, merchant: @merchant)
+          @item_2 = Item.create!(name: "Anything", description: "Anythingy", unit_price: 10.99, merchant: @merchant)
+          @item_3 = Item.create!(name: "Nothing", description: "Nothingy", unit_price: 100.99, merchant: @merchant)
+        end
+
+        context "when there are multiple matches" do
+          it "returns the 1st item in A-Z order with a case insensitive search" do
+            result = Item.find_one_by_name("tHIng")
+            expect(result.id).to eq(@item_2.id)
+          end
+        end
+
+        context "when there are no matches" do
+          it "returns nil" do
+            result = Item.find_one_by_name("xxx")
+            # require "pry"; binding.pry
+            expect(result).to be_nil
+          end
+        end
+      end
+
   
       it 'raises an error when both name and price parameters are passed' do
         params = { name: "Mouse", min_price: 50 }
