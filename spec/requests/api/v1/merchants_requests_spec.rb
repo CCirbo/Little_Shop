@@ -208,5 +208,37 @@ describe 'sad paths' do
     expect(data[:errors].first).to include("Missing required merchant attributes")
   end
 end
+require 'rails_helper'
+
+
+  describe 'GET #find' do
+    before do
+      Merchant.create!(name: "Ring World")
+      Merchant.create!(name: "Turing")
+      Merchant.create!(name: "Alpha")
+    end
+
+    it 'returns the first merchant alphabetically when multiple matches are found' do
+      get "/api/v1/merchants/find", params: { name: "Ring" }
+      expect(response).to have_http_status(:ok)
+      response_data = JSON.parse(response.body)
+      expect(response_data["data"]["attributes"]["name"]).to eq("Ring World")
+    end
+
+    it 'returns the merchant when valid name parameter is provided' do
+      get "/api/v1/merchants/find", params: { name: "Ring World" }
+      expect(response).to have_http_status(:ok)
+      response_data = JSON.parse(response.body)
+      
+      expect(response_data["data"]["attributes"]["name"]).to eq("Ring World")
+    end
+
+    it 'returns a bad request response when name parameter is missing' do
+      get "/api/v1/merchants/find"
+      expect(response).to have_http_status(:bad_request)
+      response_data = JSON.parse(response.body)
+      expect(response_data["error"]).to eq("Missing 'name' parameter")
+    end
+  end
 end
 

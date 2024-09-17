@@ -3,12 +3,8 @@ class Api::V1::MerchantItemsController < ApplicationController
 
   def show
     item = Item.find(params[:id])
-    if item
-      merchant = item.merchant
-      render json: MerchantSerializer.new(merchant)
-    else
-      head :not_found
-    end
+    merchant = item.merchant
+    render json: MerchantSerializer.new(merchant)
   end
 
   private 
