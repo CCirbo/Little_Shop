@@ -71,7 +71,7 @@ RSpec.describe "Merchants endpoints", type: :request do
     end
   end
 
- 
+
   describe 'sad paths fetch one merchant' do
     it "will gracefully handle if a merchant id doesn't exist" do
       get "/api/v1/merchants/9999" 
