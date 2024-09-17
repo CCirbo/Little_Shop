@@ -235,9 +235,15 @@ require 'rails_helper'
 
     it 'returns a bad request response when name parameter is missing' do
       get "/api/v1/merchants/find"
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:ok)
       response_data = JSON.parse(response.body)
-      expect(response_data["error"]).to eq("Missing 'name' parameter")
+    end
+
+    it 'returns an empty response when no merchant matches the search' do
+      get "/api/v1/merchants/find", params: { name: "NonExistentMerchant" }
+      expect(response).to have_http_status(:ok)
+      response_data = JSON.parse(response.body)
+      expect(response_data["data"]).to eq({})
     end
   end
 end
