@@ -42,7 +42,17 @@ RSpec.describe Merchant, type: :model do
 
       expect(result).to eq(expected)
     end
-  end
 
-    #need test for merchant find by name. 
+    context "filter_by_name" do
+      it "returns the 1st item in A-Z order with a case insensitive search" do
+        result = Merchant.filter_by_name("meRcHa")
+        expect(result.id).to eq(@merchant_1.id)
+      end
+      
+      it "returns nil" do
+        result = Merchant.filter_by_name("xxx")
+        expect(result).to be_nil
+      end
+    end
+  end
 end
