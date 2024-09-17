@@ -31,8 +31,9 @@ class Merchant < ApplicationRecord
   def self.filter_by_name(name)
     # all_merchants = Merchant.all   
     self.where("name ILIKE '%#{name}%'").order(:name).first
-
   end
+
+  
 
 end
 
