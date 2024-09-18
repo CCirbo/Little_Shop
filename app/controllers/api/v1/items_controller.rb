@@ -29,8 +29,6 @@ class Api::V1::ItemsController < ApplicationController
     item = Item.find(params[:id])
     item.destroy
     head :no_content
-  # rescue ActiveRecord::RecordNotFound
-  #   head :not_found 
   end
 
   def find_all
@@ -53,9 +51,7 @@ class Api::V1::ItemsController < ApplicationController
       .serialize_json, status: :not_found
   end
 
-
   def bad_request_response(e)
     render json: ErrorSerializer.new(ErrorMessage.new(e.message, 400)).serialize_json, status: :bad_request
   end
-
 end
