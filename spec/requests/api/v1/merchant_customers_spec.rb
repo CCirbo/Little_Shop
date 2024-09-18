@@ -7,7 +7,7 @@ RSpec.describe "Merchants Customers API", type: :request do
     @merchant_3 = Merchant.create!(name: "Brown and Dads", created_at: 1.second.ago)
     @customer_1 = Customer.create!(first_name: "Johnny", last_name: "Carson")
     @customer_2 = Customer.create!(first_name: "King", last_name: "Louie")
-    # Associate invoices with merchants and customers
+
     Invoice.create!(merchant: @merchant_1, customer: @customer_1, status: "shipped")
     Invoice.create!(merchant: @merchant_1, customer: @customer_2, status: "shipped")
     Invoice.create!(merchant: @merchant_3, customer: @customer_2, status: "shipped")
