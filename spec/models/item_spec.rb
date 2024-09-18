@@ -72,6 +72,14 @@ RSpec.describe Item, type: :model do
     end
 
   describe "Sort_and_filter" do
+    before(:each) do
+      @merchant = Merchant.create!(name: "Test Merchant")
+      @item_1 = Item.create!(name: "Mouse", description: "Clicks", unit_price: 100.99, merchant: @merchant)
+      @item_2 = Item.create!(name: "Keyboard", description: "Types", unit_price: 10.99, merchant: @merchant)
+      @item_3 = Item.create!(name: "Pad", description: "Soft", unit_price: 120.99, merchant: @merchant)
+      @item_4 = Item.create!(name: "Notebook", description: "Gets Written On", unit_price: 121.99, merchant: @merchant)
+    end
+
     it "filters by name only" do
       params = { name: "Mouse" }
       expected = [@item_1]
