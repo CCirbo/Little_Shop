@@ -21,7 +21,9 @@ RSpec.describe Merchant, type: :model do
 
     it "retrieves all merchants" do
       expected = [@merchant_1, @merchant_2, @merchant_3]
+
       result = Merchant.sort_and_filter({})  
+
       expect(result).to eq(expected)
     end
 
@@ -31,7 +33,7 @@ RSpec.describe Merchant, type: :model do
       expect(result).to eq(expected)
     end
 
-    it "retrieves merchants whose invoices" do
+    it "retrieves merchants whose invoices have a status of 'returned'" do
       expected = [@merchant_2, @merchant_3]
       result = Merchant.sort_and_filter({status: "returned"})
       expect(result).to eq(expected)
@@ -43,7 +45,7 @@ RSpec.describe Merchant, type: :model do
         expect(result.id).to eq(@merchant_1.id)
       end
       
-      it "returns nil" do
+      it "returns nil when no merchants match query in part or whole" do
         result = Merchant.filter_by_name("xxx")
         expect(result).to be_nil
       end

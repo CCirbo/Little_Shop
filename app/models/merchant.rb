@@ -1,5 +1,4 @@
 class Merchant < ApplicationRecord
-
   has_many :items, dependent: :destroy
   has_many :invoices, dependent: :destroy
 
@@ -19,9 +18,6 @@ class Merchant < ApplicationRecord
 
   def self.merchants_with_returns
     Merchant.joins(:invoices).where(invoices: { status: "returned" })
-    # We join the Merchant table with the Invoices table
-    # That gives us access to ALL the merchants who have invoices actively associated with them
-    # Then we .where for those merchants whose invoices have a status of "returned"
   end
 
   def item_count 
@@ -29,11 +25,7 @@ class Merchant < ApplicationRecord
   end
 
   def self.filter_by_name(name)
-    # all_merchants = Merchant.all   
     self.where("name ILIKE '%#{name}%'").order(:name).first
   end
-
-  
-
 end
 
