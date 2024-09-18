@@ -5,10 +5,8 @@ RSpec.describe "Merchants Customers API", type: :request do
     @merchant_1 = Merchant.create!(name: "Brown and Sons", created_at: 3.seconds.ago)
     @merchant_2 = Merchant.create!(name: "Brown and Moms", created_at: 2.seconds.ago)
     @merchant_3 = Merchant.create!(name: "Brown and Dads", created_at: 1.second.ago)
-
     @customer_1 = Customer.create!(first_name: "Johnny", last_name: "Carson")
     @customer_2 = Customer.create!(first_name: "King", last_name: "Louie")
-
     # Associate invoices with merchants and customers
     Invoice.create!(merchant: @merchant_1, customer: @customer_1, status: "shipped")
     Invoice.create!(merchant: @merchant_1, customer: @customer_2, status: "shipped")
@@ -23,7 +21,6 @@ RSpec.describe "Merchants Customers API", type: :request do
 
     expect(customers.count).to eq(2)
 
-    # Use instance variables for customer assertions
     attributes = customers.find { |customer| customer[:id] == @customer_1.id.to_s }[:attributes]
     expect(attributes[:first_name]).to eq(@customer_1.first_name)
     expect(attributes[:last_name]).to eq(@customer_1.last_name)
@@ -51,12 +48,11 @@ RSpec.describe "Merchants Customers API", type: :request do
 
     expect(response).to be_successful
     customers = JSON.parse(response.body, symbolize_names: true)[:data]
-
     expect(customers).to eq([])
   end
 
   it "returns a 404 error if the merchant id does not exist" do
-    get "/api/v1/merchants/999999/customers" # Non-existent merchant ID
+    get "/api/v1/merchants/999999/customers" 
   
     expect(response).to_not be_successful
     expect(response.status).to eq(404)
@@ -67,5 +63,4 @@ RSpec.describe "Merchants Customers API", type: :request do
     expect(data[:errors].first[:status]).to eq("404")
     expect(data[:errors].first[:title]).to eq("Couldn't find Merchant with 'id'=999999")
   end
-
 end
