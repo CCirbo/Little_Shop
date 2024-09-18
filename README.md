@@ -33,3 +33,7 @@ Lito Croy https://github.com/litobot
 Jim Macur https://github.com/jimmacur  
 Melchor De La Rosa https://github.com/MDelarosa1993  
 Terra Manning https://github.com/TDManning
+
+
+</br>
+<img src="DataDiagram.png" alt="Diagram showing data table relationships" width="750" height="350">
