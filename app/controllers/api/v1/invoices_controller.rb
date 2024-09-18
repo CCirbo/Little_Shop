@@ -20,7 +20,6 @@ class Api::V1::InvoicesController < ApplicationController
     render json: ErrorSerializer.new(ErrorMessage.new(e.message, 404))
       .serialize_json, status: :not_found
   end
-  
 end
 
 
