@@ -2,18 +2,18 @@ class Api::V1::MerchantsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
 
   def index
-      merchants = Merchant.sort_and_filter(params)
-      render json: MerchantSerializer.new(merchants, {params: {action: "index"} } )
+    merchants = Merchant.sort_and_filter(params)
+    render json: MerchantSerializer.new(merchants, {params: {action: "index"} } )
   end
 
   def show
-      render json: MerchantSerializer.new(Merchant.find(params[:id]))
+    render json: MerchantSerializer.new(Merchant.find(params[:id]))
   end
 
   def update
-      merchant = Merchant.find(params[:id])
-      merchant.update(merchant_params)
-      render json: MerchantSerializer.new(merchant)
+    merchant = Merchant.find(params[:id])
+    merchant.update(merchant_params)
+    render json: MerchantSerializer.new(merchant)
   end
 
   def create
@@ -29,15 +29,15 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def destroy
-      merchant = Merchant.find(params[:id])
-      merchant.destroy  
-      head :no_content  
+    merchant = Merchant.find(params[:id])
+    merchant.destroy  
+    head :no_content  
   end
 
   def find
     merchant = Merchant.filter_by_name(params[:name])
     if merchant
-    render json: MerchantSerializer.new(merchant)
+      render json: MerchantSerializer.new(merchant)
     else 
       render json: {data: {} }, status: :ok
     end
@@ -46,7 +46,7 @@ class Api::V1::MerchantsController < ApplicationController
   private
 
   def merchant_params
-      params.require(:merchant).permit(:name)
+    params.require(:merchant).permit(:name)
   end
 
   def not_found_response(e)
