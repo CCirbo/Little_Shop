@@ -23,8 +23,7 @@ RSpec.describe "MerchantItems", type: :request do
     end
   end
 
-  it 'handles an exception gracefully with a error message' do
-
+  it "sad-path handles an exception gracefully with a error message" do
     get "/api/v1/items/9999/merchant"
 
     expect(response).to have_http_status(404)
@@ -44,7 +43,6 @@ RSpec.describe "MerchantItems", type: :request do
 
     expect(error).to have_key(:title)
     expect(error[:title]).to be_a(String)
-    
   end
 end
 

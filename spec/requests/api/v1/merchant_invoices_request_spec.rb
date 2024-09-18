@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Merchant Invoices API" do
+RSpec.describe "Merchant Invoices API", type: :request do
   it "can send a list of invoices for a merchant based on status" do
     merchant = Merchant.create!(name: "Test Merchant")
     customer = Customer.create!(first_name: "Customer First", last_name: "Customer last")
@@ -34,7 +34,7 @@ RSpec.describe "Merchant Invoices API" do
     end
   end
 
-  it 'returns an empty array if no invoices with the given status are found' do
+  it "returns an empty array if no invoices with the given status are found" do
     merchant = Merchant.create!(name: "Test Merchant")
     customer = Customer.create!(first_name: "Customer First", last_name: "Customer last")
 
@@ -42,11 +42,10 @@ RSpec.describe "Merchant Invoices API" do
 
     expect(response).to be_successful
     invoices = JSON.parse(response.body, symbolize_names: true)[:data]
-
     expect(invoices).to eq([])
   end
 
-  it 'returns an error for invalid status' do
+  it "returns an error for invalid status" do
     merchant = Merchant.create!(name: "Test Merchant")
     customer = Customer.create!(first_name: "Customer First", last_name: "Customer last")
 
@@ -55,10 +54,9 @@ RSpec.describe "Merchant Invoices API" do
     expect(response.status).to eq(400)
   end
 
-  it 'returns all invoices for a merchant if no status is provided' do
+  it "returns all invoices for a merchant if no status is provided" do
     merchant = Merchant.create!(name: "Test Merchant")
     customer = Customer.create!(first_name: "Customer First", last_name: "Customer Last")
-
     invoice1 = Invoice.create!(status: "shipped", merchant_id: merchant.id, customer_id: customer.id)
     invoice2 = Invoice.create!(status: "packaged", merchant_id: merchant.id, customer_id: customer.id)
     invoice3 = Invoice.create!(status: "returned", merchant_id: merchant.id, customer_id: customer.id)
@@ -75,7 +73,7 @@ RSpec.describe "Merchant Invoices API" do
     expect(invoices[2][:id].to_i).to eq(invoice3.id)
   end
 
-  it 'returns a 404 error when merchant is not found' do
+  it "returns a 404 error when merchant is not found" do
     get "/api/v1/merchants/9999/invoices"
 
     expect(response).to have_http_status(:not_found)
@@ -96,5 +94,4 @@ RSpec.describe "Merchant Invoices API" do
     expect(error).to have_key(:title)
     expect(error[:title]).to eq("Couldn't find Merchant with 'id'=9999")
   end
-
 end
