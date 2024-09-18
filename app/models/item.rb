@@ -6,12 +6,6 @@ class Item < ApplicationRecord
         order(:unit_price)
     end
 
-    # User can search by one of these things:
-        # name
-        # min_price
-        # max_price
-        # min_price & max_price
-
     def self.sort_and_filter(params)
         if params[:name] && (params[:min_price] || params[:max_price])
             raise ArgumentError.new("Cannot search by both name and price")

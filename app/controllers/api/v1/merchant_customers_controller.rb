@@ -4,7 +4,6 @@ class Api::V1::MerchantCustomersController < ApplicationController
   def index
     merchant = Merchant.find(params[:merchant_id])
     customers = Customer.for_merchant(params[:merchant_id])
-
     render json: CustomerSerializer.new(customers)
   end
 
