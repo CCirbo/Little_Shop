@@ -6,7 +6,7 @@ RSpec.describe Merchant, type: :model do
     it { should have_many :invoices }
   end
 
-  describe "class methods" do
+  describe "Merchant Class Methods" do
     before(:each) do
       @merchant_1 = Merchant.create!(name: "Merchant A", created_at: 2.days.ago)
       @merchant_2 = Merchant.create!(name: "Merchant B", created_at: 1.day.ago)
@@ -21,25 +21,19 @@ RSpec.describe Merchant, type: :model do
 
     it "retrieves all merchants" do
       expected = [@merchant_1, @merchant_2, @merchant_3]
-
-      result = Merchant.sort_and_filter({})  # Still have to pass empty params for this to work
-
+      result = Merchant.sort_and_filter({})  
       expect(result).to eq(expected)
     end
 
     it "retrieves merchants sorted by creation date (newest first)" do
       expected = [@merchant_3, @merchant_2, @merchant_1]
-
       result = Merchant.sort_and_filter({sorted: "age"})
-      
       expect(result).to eq(expected)
     end
 
     it "retrieves merchants whose invoices" do
       expected = [@merchant_2, @merchant_3]
-
       result = Merchant.sort_and_filter({status: "returned"})
-
       expect(result).to eq(expected)
     end
 
