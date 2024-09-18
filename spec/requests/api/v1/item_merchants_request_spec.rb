@@ -1,14 +1,7 @@
 require 'rails_helper'
 
-RSpec.configure do |config| 
-
- config.formatter = :documentation 
-
-
-end
-
-RSpec.describe "Item Merchants" do 
-  it 'returns items based on merchant id' do 
+RSpec.describe "Item Merchants", type: :request do 
+  it "returns items based on merchant id" do 
     merchant = Merchant.create!(id: 1, name: "Test Merchant")
     Item.create!(name: "Mouse", description: "Clicks", unit_price:100.99 , merchant_id: merchant.id)
     Item.create!(name: "Keyboard", description: "Types", unit_price:10.99 , merchant_id: merchant.id)
@@ -20,7 +13,6 @@ RSpec.describe "Item Merchants" do
     expect(response).to be_successful
 
     item_response = JSON.parse(response.body, symbolize_names: true)[:data]
-    
     expect(item_response.size).to eq(4)
 
     item_response.each do |item|
@@ -45,7 +37,7 @@ RSpec.describe "Item Merchants" do
     end
   end
 
-  it 'handles an exception gracefully with a error message' do 
+  it "handles an exception gracefully with a error message" do 
     get "/api/v1/merchants/9999/items"
 
     expect(response).to have_http_status(404)
@@ -65,6 +57,5 @@ RSpec.describe "Item Merchants" do
 
     expect(error).to have_key(:title)
     expect(error[:title]).to be_a(String)
-    
   end 
 end
